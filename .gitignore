@@ -12,6 +12,9 @@ dist
 dist-ssr
 *.local
 
+# Challenge / design files (keep out of the repo)
+challengeREADME.md
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
