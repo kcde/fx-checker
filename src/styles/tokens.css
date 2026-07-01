@@ -1,0 +1,143 @@
+/* FX_CHECKER design tokens — ported from the design project's fig-tokens.css.
+   Foundations: color ramp, accents, spacing scale, radius scale, type presets. */
+
+:root {
+  /* ===== Color — Neutral ramp ===== */
+  --neutral-900: rgb(10, 10, 10);
+  --neutral-700: rgb(23, 23, 25);
+  --neutral-600: rgb(32, 32, 34);
+  --neutral-500: rgb(46, 46, 46);
+  --neutral-400: rgb(61, 61, 61);
+  --neutral-300: rgb(69, 69, 71);
+  --neutral-200: rgb(157, 157, 157);
+  --neutral-100: rgb(198, 198, 198);
+  --neutral-50: rgb(255, 255, 255);
+
+  /* ===== Color — Accents ===== */
+  --lime-500: rgb(206, 247, 57);
+  --lime-800: rgb(40, 51, 0);
+  --green-500: rgb(66, 235, 5);
+  --red-500: rgb(255, 65, 65);
+
+  /* ===== Color — Ink (page text on light) ===== */
+  --ink: rgb(2, 1, 44);
+  --ink-soft: rgb(69, 69, 71);
+  --ink-mono: rgb(43, 38, 32);
+
+  /* ===== Fonts ===== */
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+  --font-sans: Inter, sans-serif;
+  --font-display: Fraunces, serif;
+  --font-label: "Public Sans", sans-serif;
+  --font-grotesk: "Space Grotesk", sans-serif;
+
+  /* ===== Spacing ===== */
+  --spacing-0: 0px;
+  --spacing-025: 2px;
+  --spacing-050: 4px;
+  --spacing-075: 6px;
+  --spacing-100: 8px;
+  --spacing-125: 10px;
+  --spacing-150: 12px;
+  --spacing-200: 16px;
+  --spacing-250: 20px;
+  --spacing-300: 24px;
+  --spacing-400: 32px;
+  --spacing-500: 40px;
+  --spacing-600: 48px;
+  --spacing-800: 64px;
+  --spacing-1000: 80px;
+  --spacing-1200: 96px;
+  --spacing-1400: 112px;
+  --spacing-1600: 128px;
+  --spacing-1800: 140px;
+
+  /* ===== Radius ===== */
+  --radius-0: 0px;
+  --radius-4: 4px;
+  --radius-6: 6px;
+  --radius-8: 8px;
+  --radius-10: 10px;
+  --radius-12: 12px;
+  --radius-16: 16px;
+  --radius-20: 20px;
+  --radius-24: 24px;
+  --radius-full: 999px;
+}
+
+/* ===== Type presets (JetBrains Mono drives the whole UI) ===== */
+.t-preset-1 {
+  font-family: var(--font-mono);
+  font-size: 40px;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.5px;
+}
+.t-preset-1-tablet {
+  font-family: var(--font-mono);
+  font-size: 32px;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.5px;
+}
+.t-preset-2 {
+  font-family: var(--font-mono);
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 1.2;
+}
+.t-preset-2-bold {
+  font-family: var(--font-mono);
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.4;
+  letter-spacing: -0.5px;
+}
+.t-preset-3 {
+  font-family: var(--font-mono);
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.2;
+  letter-spacing: 1px;
+}
+.t-preset-3-medium {
+  font-family: var(--font-mono);
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1.2;
+  letter-spacing: 1px;
+}
+.t-preset-3-bold {
+  font-family: var(--font-mono);
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: 1px;
+}
+.t-preset-4 {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.2;
+  letter-spacing: 1px;
+}
+.t-preset-5 {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.2;
+  letter-spacing: 0.5px;
+}
+.t-preset-5-medium {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.3;
+  letter-spacing: 0.5px;
+}
+.t-preset-6 {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 400;
+  line-height: 1;
+}

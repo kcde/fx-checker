@@ -1,0 +1,21 @@
+import { useState, useEffect } from "react";
+import "./App.css";
+import "./components/components.css";
+
+import DesignSystemPage from "./pages/DesignSystemPage";
+import ComponentsPage from "./pages/ComponentsPage";
+
+function useHashRoute() {
+  const [hash, setHash] = useState(() => window.location.hash);
+  useEffect(() => {
+    const onChange = () => setHash(window.location.hash);
+    window.addEventListener("hashchange", onChange);
+    return () => window.removeEventListener("hashchange", onChange);
+  }, []);
+  return hash;
+}
+
+export default function App() {
+  const hash = useHashRoute();
+  return hash === "#/components" ? <ComponentsPage /> : <DesignSystemPage />;
+}

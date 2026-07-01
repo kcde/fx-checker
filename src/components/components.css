@@ -1,0 +1,608 @@
+/* FX_CHECKER reusable components — token-driven, one class per component
+   with `--<state>` modifiers matching the design's documented states. */
+
+button {
+  font: inherit;
+  border: none;
+  background: none;
+  cursor: pointer;
+  color: inherit;
+}
+
+/* ===================== Log Conversion Button ===================== */
+.log-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-075);
+  border-radius: var(--radius-8);
+  padding: var(--spacing-100) var(--spacing-150);
+  font-family: var(--font-mono);
+  font-weight: 500;
+  font-size: 12px;
+  letter-spacing: 0.5px;
+  color: var(--neutral-50);
+  background: transparent;
+  box-shadow: inset 0 0 0 1px var(--lime-500);
+}
+.log-btn--hover {
+  background: var(--lime-800);
+}
+.log-btn--pressed {
+  background: var(--lime-500);
+  color: var(--neutral-900);
+  box-shadow: none;
+}
+.log-btn--focus {
+  background: var(--neutral-700);
+  box-shadow:
+    inset 0 0 0 1px var(--lime-500),
+    0 0 0 3px var(--neutral-700),
+    0 0 0 4px var(--lime-500);
+}
+.log-btn--disabled {
+  color: var(--neutral-200);
+  box-shadow: inset 0 0 0 1px var(--neutral-300);
+  cursor: not-allowed;
+}
+
+/* ===================== Favorite Button ===================== */
+.fav-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-100);
+  border-radius: var(--radius-8);
+  padding: var(--spacing-100) var(--spacing-150);
+  background: var(--neutral-600);
+  box-shadow: inset 0 0 0 1px var(--neutral-500);
+  font-family: var(--font-mono);
+  font-weight: 500;
+  font-size: 12px;
+  letter-spacing: 0.5px;
+  color: var(--neutral-50);
+}
+.fav-btn--icon {
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  justify-content: center;
+}
+
+/* ===================== Tab Button ===================== */
+.tab {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  background: none;
+}
+.tab__inner {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-100);
+  padding: 0 var(--spacing-200);
+  height: 40px;
+}
+.tab--focus .tab__inner {
+  border-radius: var(--radius-8);
+  box-shadow: inset 0 0 0 2px var(--lime-500);
+}
+.tab__label {
+  font-family: var(--font-mono);
+  font-size: 16px;
+  letter-spacing: 1px;
+  color: var(--neutral-200);
+  white-space: nowrap;
+}
+.tab--active .tab__label,
+.tab--focus .tab__label {
+  color: var(--neutral-50);
+}
+.tab__count {
+  width: 20px;
+  height: 20px;
+  border-radius: var(--radius-full);
+  background: var(--lime-800);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 1.2px;
+  color: var(--lime-500);
+}
+.tab__underline {
+  height: 2px;
+  align-self: stretch;
+  background: var(--lime-500);
+}
+
+/* ===================== Currency Button ===================== */
+.currency-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-100);
+  border-radius: var(--radius-8);
+  padding: var(--spacing-125);
+  background: var(--neutral-500);
+  box-shadow: inset 0 0 0 1px var(--neutral-400);
+  font-family: var(--font-mono);
+  font-size: 14px;
+  letter-spacing: 1px;
+  color: var(--neutral-50);
+}
+.currency-btn--hover {
+  background: var(--neutral-400);
+  box-shadow: inset 0 0 0 1px var(--neutral-300);
+}
+.currency-btn--focus {
+  background: var(--neutral-500);
+  box-shadow:
+    inset 0 0 0 2px var(--lime-500),
+    0 0 0 3px var(--neutral-900),
+    0 0 0 4px var(--lime-500);
+}
+
+/* ===================== Amount Input ===================== */
+.amount-input {
+  display: flex;
+  flex-direction: column;
+  width: 140px;
+}
+.amount-input__figure {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 40px;
+  line-height: 1;
+  letter-spacing: -0.5px;
+  color: var(--neutral-50);
+}
+.amount-input--empty .amount-input__figure {
+  color: var(--neutral-200);
+}
+.amount-input__rule {
+  height: 1px;
+  margin-top: var(--spacing-125);
+  background: var(--neutral-600);
+}
+.amount-input--hover .amount-input__rule {
+  background: var(--neutral-200);
+}
+.amount-input--focused {
+  flex-direction: row;
+  align-items: center;
+  width: auto;
+  border-radius: var(--radius-8);
+  box-shadow: inset 0 0 0 2px var(--lime-500);
+  padding: var(--spacing-075) var(--spacing-150);
+}
+.amount-input--focused .amount-input__figure {
+  color: var(--neutral-200);
+}
+.amount-input__caret {
+  display: inline-block;
+  width: 2px;
+  height: 36px;
+  background: var(--neutral-50);
+  margin-left: 3px;
+}
+
+/* ===================== Search Input ===================== */
+.search-input {
+  width: 360px;
+  max-width: 100%;
+  border-radius: var(--radius-6);
+  box-shadow: inset 0 0 0 1px var(--neutral-200);
+  padding: var(--spacing-150);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-125);
+}
+.search-input--active {
+  box-shadow: inset 0 0 0 1px var(--lime-500);
+}
+.search-input__text {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.5px;
+  color: var(--neutral-200);
+}
+.search-input--active .search-input__text {
+  color: var(--neutral-50);
+}
+
+/* ===================== Clear Button ===================== */
+.clear-btn {
+  display: inline-flex;
+  align-items: center;
+  border-radius: var(--radius-8);
+  padding: var(--spacing-100) var(--spacing-200);
+  background: var(--neutral-600);
+  box-shadow: inset 0 0 0 1px var(--neutral-400);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.5px;
+  color: var(--neutral-200);
+}
+.clear-btn--hover {
+  background: var(--neutral-500);
+  color: var(--neutral-100);
+}
+.clear-btn--focus {
+  background: var(--neutral-600);
+  box-shadow: inset 0 0 0 2px var(--lime-500);
+}
+
+/* ===================== Icon buttons (Exchange / Delete) ===================== */
+.icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--neutral-600);
+  box-shadow: inset 0 0 0 1px var(--neutral-500);
+  color: var(--neutral-50);
+}
+.icon-btn--hover {
+  background: var(--neutral-500);
+  box-shadow: inset 0 0 0 1px var(--neutral-400);
+}
+.icon-btn--focus {
+  background: var(--neutral-600);
+  box-shadow: inset 0 0 0 2px var(--lime-500);
+}
+.icon-btn--exchange {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-12);
+}
+.icon-btn--delete {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-8);
+}
+
+/* ===================== Live Rate Chip ===================== */
+.chip {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-125);
+  border: 1px solid var(--neutral-500);
+  padding: var(--spacing-150) var(--spacing-250);
+}
+.chip__text {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 1px;
+  color: var(--neutral-200);
+}
+.chip__change {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 1px;
+}
+.chip__change--up {
+  color: var(--green-500);
+}
+.chip__change--down {
+  color: var(--red-500);
+}
+
+/* ===================== Tab Bar (desktop, interactive) ===================== */
+.tabbar {
+  border: 1px solid var(--neutral-600);
+  display: flex;
+  overflow-x: auto;
+}
+.tabbar__tab {
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-shrink: 0;
+  background: none;
+}
+.tabbar__inner {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-100);
+  padding: 0 var(--spacing-200);
+  height: 40px;
+}
+.tabbar__label {
+  font-family: var(--font-mono);
+  font-size: 16px;
+  letter-spacing: 1px;
+  color: var(--neutral-50);
+  white-space: nowrap;
+}
+.tabbar__count {
+  width: 20px;
+  height: 20px;
+  border-radius: var(--radius-full);
+  background: var(--lime-800);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--lime-500);
+}
+.tabbar__underline {
+  height: 2px;
+  align-self: stretch;
+  background: var(--lime-500);
+}
+
+/* ===================== Mobile tab selector + dropdown item ===================== */
+.mobile-selector {
+  width: 343px;
+  max-width: 100%;
+  border-radius: var(--radius-8);
+  background: var(--neutral-700);
+  box-shadow: inset 0 0 0 1px var(--neutral-400);
+  padding: 0 var(--spacing-150);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 40px;
+}
+.mobile-selector__label {
+  font-family: var(--font-mono);
+  font-size: 16px;
+  letter-spacing: 1px;
+  color: var(--neutral-50);
+}
+.mobile-dropdown-item {
+  width: 343px;
+  max-width: 100%;
+  border-radius: var(--radius-10);
+  background: var(--neutral-600);
+  padding: var(--spacing-125) var(--spacing-100);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-100);
+}
+.mobile-dropdown-item__label {
+  font-family: var(--font-mono);
+  font-size: 16px;
+  letter-spacing: 1px;
+  color: var(--neutral-50);
+  flex: 1;
+}
+
+/* ===================== Currency Item (picker row) ===================== */
+.currency-item {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-150);
+  border-radius: var(--radius-4);
+  padding: var(--spacing-150) var(--spacing-100);
+  background: var(--neutral-600);
+  box-shadow: inset 0 0 0 1px var(--neutral-600);
+}
+.currency-item--hover {
+  background: var(--neutral-500);
+  box-shadow: inset 0 0 0 1px var(--neutral-400);
+}
+.currency-item__code {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--neutral-50);
+  flex-shrink: 0;
+}
+.currency-item__name {
+  font-family: var(--font-grotesk);
+  font-size: 13px;
+  color: var(--neutral-200);
+  flex: 1;
+}
+
+/* ===================== Row items (Compare / Favorites / Logged) ===================== */
+.row-spec {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-150);
+  align-items: stretch;
+}
+
+.compare-item,
+.fav-item,
+.logged-item {
+  display: flex;
+  align-items: center;
+  border-radius: var(--radius-10);
+  background: var(--neutral-600);
+  box-shadow: inset 0 0 0 1px var(--neutral-500);
+}
+.compare-item--hover,
+.fav-item--hover,
+.logged-item--hover {
+  background: var(--neutral-500);
+  box-shadow: inset 0 0 0 1px var(--neutral-400);
+}
+
+/* Compare */
+.compare-item {
+  gap: var(--spacing-250);
+  padding: var(--spacing-150) var(--spacing-200);
+}
+.compare-item--active {
+  background: var(--neutral-600);
+  box-shadow: inset 0 0 0 2px var(--lime-500);
+}
+.compare-item__main {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-075);
+  flex: 1;
+}
+.compare-item__code {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  letter-spacing: 1px;
+  color: var(--neutral-50);
+}
+.compare-item__name {
+  font-family: var(--font-grotesk);
+  font-size: 11px;
+  color: var(--neutral-200);
+}
+.compare-item__values {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-075);
+  align-items: flex-end;
+  flex-shrink: 0;
+}
+.compare-item__value {
+  font-family: var(--font-mono);
+  font-size: 16px;
+  color: var(--neutral-50);
+  white-space: nowrap;
+}
+.compare-item__rate {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--neutral-200);
+}
+
+/* Favorites */
+.fav-item {
+  gap: var(--spacing-250);
+  padding: var(--spacing-150) var(--spacing-200);
+}
+.fav-item__pair {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-100);
+  flex: 1;
+}
+.fav-item__base {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  letter-spacing: 0.52px;
+  color: var(--neutral-50);
+  white-space: nowrap;
+}
+.fav-item__quote {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  letter-spacing: 1px;
+  color: var(--neutral-50);
+  white-space: nowrap;
+}
+.fav-item__values {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-075);
+  align-items: flex-end;
+  flex-shrink: 0;
+  width: 80px;
+}
+.fav-item__rate {
+  font-family: var(--font-mono);
+  font-size: 16px;
+  letter-spacing: 1px;
+  color: var(--neutral-50);
+  white-space: nowrap;
+}
+.fav-item__change {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  white-space: nowrap;
+}
+.fav-item__change--up {
+  color: var(--green-500);
+}
+.fav-item__change--down {
+  color: var(--red-500);
+}
+
+/* Logged (desktop) */
+.logged-item {
+  gap: var(--spacing-200);
+  padding: var(--spacing-200);
+}
+.logged-item__time {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  letter-spacing: 1px;
+  color: var(--neutral-200);
+  width: 64px;
+  flex-shrink: 0;
+}
+.logged-item__pair {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-100);
+  flex: 1;
+}
+.logged-item__code {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  letter-spacing: 1px;
+  color: var(--neutral-50);
+}
+.logged-item__amounts {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-250);
+  flex-shrink: 0;
+}
+.logged-item__from {
+  font-family: var(--font-mono);
+  font-size: 16px;
+  letter-spacing: 1px;
+  color: var(--neutral-100);
+  white-space: nowrap;
+}
+.logged-item__to {
+  font-family: var(--font-mono);
+  font-size: 16px;
+  letter-spacing: 1px;
+  color: var(--lime-500);
+  white-space: nowrap;
+}
+
+/* Logged (mobile) */
+.logged-item-m {
+  width: 311px;
+  max-width: 100%;
+  border-radius: var(--radius-10);
+  background: var(--neutral-600);
+  box-shadow: inset 0 0 0 1px var(--neutral-500);
+  padding: var(--spacing-150);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-125);
+}
+.logged-item-m__info {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-050);
+  flex: 1;
+}
+.logged-item-m__time {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  letter-spacing: 1px;
+  color: var(--neutral-200);
+}
+.logged-item-m__pair {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-100);
+}
+.logged-item-m__code {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 1px;
+  color: var(--neutral-50);
+}
+.logged-item-m__amounts {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-025);
+  align-items: flex-end;
+  flex-shrink: 0;
+}
