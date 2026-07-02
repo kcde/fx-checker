@@ -3,6 +3,23 @@
   100% { transform: translateX(-50%); }
 }
 
+/* Visually hidden, still read by screen readers (live regions, extra labels). */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .app-nav__ticker { animation: none; }
+}
+
 /* ─── App shell ─── */
 .app {
   min-height: 100vh;
@@ -187,6 +204,7 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  gap: 20px;
 }
 
 .conv-card__label {
@@ -219,6 +237,12 @@
 .conv-card__input:focus {
   outline: none;
   border-bottom-color: var(--neutral-400);
+}
+
+.conv-card__input:focus-visible {
+  outline: 2px solid var(--lime-500);
+  outline-offset: 4px;
+  border-radius: var(--radius-4);
 }
 
 .conv-card__input::placeholder {

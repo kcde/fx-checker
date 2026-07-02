@@ -17,7 +17,22 @@ export default function FavoritesItem({
     <div
       className={`fav-item fav-item--${state}`}
       role={onSelect ? "button" : undefined}
+      tabIndex={onSelect ? 0 : undefined}
+      aria-label={onSelect ? `Load ${base} to ${quote} into the converter` : undefined}
       onClick={onSelect}
+      onKeyDown={
+        onSelect
+          ? (e) => {
+              // ignore keys bubbling up from the star button so its own
+              // Enter/Space activation isn't hijacked by the row
+              if (e.target !== e.currentTarget) return;
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                onSelect();
+              }
+            }
+          : undefined
+      }
     >
       <div className="fav-item__pair">
         <span className="fav-item__base">{base}</span>

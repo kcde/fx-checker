@@ -9,6 +9,20 @@ button {
   color: inherit;
 }
 
+/* Visible keyboard focus ring (lime) — critical on the dark UI. Only shows for
+   keyboard focus, so pointer interaction is unaffected. */
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+[role="button"]:focus-visible,
+[role="tab"]:focus-visible,
+[role="option"]:focus-visible,
+[tabindex]:focus-visible {
+  outline: 2px solid var(--lime-500);
+  outline-offset: 2px;
+  border-radius: var(--radius-8);
+}
+
 /* ===================== Log Conversion Button ===================== */
 .log-btn {
   display: inline-flex;
@@ -325,6 +339,14 @@ button {
   align-items: center;
   flex-shrink: 0;
   background: none;
+}
+/* draw the ring inset so the scroll container's overflow can't clip it, and hide
+   the active underline while focused so the ring + underline don't clash */
+.tabbar__tab:focus-visible {
+  outline-offset: -2px;
+}
+.tabbar__tab:focus-visible .tabbar__underline {
+  visibility: hidden;
 }
 .tabbar__inner {
   display: flex;

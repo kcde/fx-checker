@@ -69,6 +69,7 @@ export default function Icon({ name, size = 16, width, height, color = "currentC
       viewBox={icon.viewBox}
       style={{ display: "block", flexShrink: 0, ...style }}
       aria-hidden="true"
+      focusable="false"
     >
       {icon.paths.map((d, i) => (
         <path key={i} d={d} fill={color} fillRule="evenodd" />

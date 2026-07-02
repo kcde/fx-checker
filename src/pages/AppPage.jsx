@@ -45,6 +45,9 @@ export default function AppPage() {
   const loggedTimer = useRef(null);
   useEffect(() => () => clearTimeout(loggedTimer.current), []);
 
+  // polite screen-reader announcement for discrete actions (pin / log)
+  const [announce, setAnnounce] = useState('');
+
   const handleLog = useCallback(() => {
     if (!canLog) return;
     dispatch({
@@ -60,9 +63,19 @@ export default function AppPage() {
       },
     });
     setLogged(true);
+    setAnnounce(`Conversion logged: ${amount} ${base} to ${quote}`);
     clearTimeout(loggedTimer.current);
     loggedTimer.current = setTimeout(() => setLogged(false), 1500);
   }, [canLog, dispatch, base, quote, amount, converted, pairRate]);
+
+  const handleToggleFavorite = useCallback(() => {
+    setAnnounce(
+      isFavorited
+        ? `${base} to ${quote} removed from favorites`
+        : `${base} to ${quote} pinned to favorites`,
+    );
+    dispatch({ type: 'TOGGLE_FAVORITE', base, quote });
+  }, [dispatch, isFavorited, base, quote]);
 
   const tickerItems = tickerData.map((it) => {
     const up = it.direction === 'up';
@@ -118,6 +131,12 @@ export default function AppPage() {
           Couldn&apos;t reach the rates service — showing what&apos;s available.
         </div>
       )}
+
+      {/* live regions: settled conversion result + discrete action confirmations */}
+      <span className="sr-only" aria-live="polite">
+        {converted != null ? `${amount} ${base} equals ${formatAmount(converted)} ${quote}` : ''}
+      </span>
+      <div className="sr-only" role="status" aria-live="polite">{announce}</div>
 
       <div className="app-body">
 
@@ -193,7 +212,7 @@ export default function AppPage() {
               <div className="converter__actions">
                 <FavoriteButton
                   active={isFavorited}
-                  onClick={() => dispatch({ type: 'TOGGLE_FAVORITE', base, quote })}
+                  onClick={handleToggleFavorite}
                 />
                 <LogConversionButton
                   state={logged ? 'pressed' : 'default'}
@@ -225,7 +244,12 @@ export default function AppPage() {
       </div>
 
       {/* ─── Tab panels ─── */}
-      <div className="tab-content">
+      <div
+        className="tab-content"
+        role="tabpanel"
+        id={`panel-${activeTab}`}
+        aria-labelledby={`tab-${activeTab}`}
+      >
         {activeTab === 'history' && (
           hasConversion ? (
             <HistoryPanel />
@@ -274,24 +298,49 @@ const TABS = [
 
 function AppTabBar({ activeTab, favoritesCount, logCount, onSelect }) {
   const counts = { favorites: favoritesCount, log: logCount };
+
+  // Manual-activation tabs (WAI-ARIA): arrows only MOVE focus; the panel switches
+  // when the user presses Enter/Space (native button onClick). This avoids kicking
+  // off each panel's data fetch just by arrowing past it.
+  const onKeyDown = (e) => {
+    if (!['ArrowRight', 'ArrowLeft', 'Home', 'End'].includes(e.key)) return;
+    e.preventDefault();
+    const focusedId = document.activeElement?.id?.startsWith('tab-')
+      ? document.activeElement.id.slice(4)
+      : activeTab;
+    const from = TABS.findIndex((t) => t.id === focusedId);
+    let next;
+    if (e.key === 'ArrowRight') next = (from + 1) % TABS.length;
+    else if (e.key === 'ArrowLeft') next = (from - 1 + TABS.length) % TABS.length;
+    else if (e.key === 'Home') next = 0;
+    else next = TABS.length - 1;
+    document.getElementById(`tab-${TABS[next].id}`)?.focus();
+  };
+
   return (
-    <div className="tabbar" role="tablist">
-      {TABS.map((t) => (
-        <button
-          key={t.id}
-          type="button"
-          className="tabbar__tab"
-          role="tab"
-          aria-selected={activeTab === t.id}
-          onClick={() => onSelect(t.id)}
-        >
-          <span className="tabbar__inner">
-            <span className="tabbar__label">{t.label}</span>
-            {counts[t.id] != null && <span className="tabbar__count">{counts[t.id]}</span>}
-          </span>
-          {activeTab === t.id && <span className="tabbar__underline" />}
-        </button>
-      ))}
+    <div className="tabbar" role="tablist" onKeyDown={onKeyDown}>
+      {TABS.map((t) => {
+        const selected = activeTab === t.id;
+        return (
+          <button
+            key={t.id}
+            id={`tab-${t.id}`}
+            type="button"
+            className="tabbar__tab"
+            role="tab"
+            aria-selected={selected}
+            aria-controls={`panel-${t.id}`}
+            tabIndex={selected ? 0 : -1}
+            onClick={() => onSelect(t.id)}
+          >
+            <span className="tabbar__inner">
+              <span className="tabbar__label">{t.label}</span>
+              {counts[t.id] != null && <span className="tabbar__count">{counts[t.id]}</span>}
+            </span>
+            {selected && <span className="tabbar__underline" />}
+          </button>
+        );
+      })}
     </div>
   );
 }

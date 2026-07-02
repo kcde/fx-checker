@@ -7,9 +7,26 @@ const POPULAR = ['USD', 'EUR', 'GBP', 'JPY', 'AUD', 'CAD', 'CHF', 'CNY'];
 export default function CurrencyPicker({ currencies, selected, onSelect, loading }) {
   const [query, setQuery] = useState('');
   const inputRef = useRef(null);
+  const listRef = useRef(null);
 
   // autofocus the search when the popover opens
   useEffect(() => { inputRef.current?.focus(); }, []);
+
+  // roving focus over the visible option buttons via arrow keys
+  const onKeyDown = (e) => {
+    if (!['ArrowDown', 'ArrowUp', 'Home', 'End'].includes(e.key)) return;
+    const opts = Array.from(listRef.current?.querySelectorAll('button[role="option"]') ?? []);
+    if (opts.length === 0) return;
+    e.preventDefault();
+    const idx = opts.indexOf(document.activeElement);
+    if (e.key === 'ArrowUp' && idx <= 0) { inputRef.current?.focus(); return; }
+    let next;
+    if (e.key === 'Home') next = 0;
+    else if (e.key === 'End') next = opts.length - 1;
+    else if (e.key === 'ArrowDown') next = idx < 0 ? 0 : Math.min(idx + 1, opts.length - 1);
+    else next = idx - 1;
+    opts[next]?.focus();
+  };
 
   // full list as [{ code, name }]
   const all = useMemo(
@@ -44,12 +61,12 @@ export default function CurrencyPicker({ currencies, selected, onSelect, loading
   );
 
   return (
-    <div className="currency-picker">
+    <div className="currency-picker" onKeyDown={onKeyDown}>
       <div className="currency-picker__search">
         <SearchInput inputRef={inputRef} value={query} onChange={(e) => setQuery(e.target.value)} />
       </div>
 
-      <div className="currency-picker__list" role="listbox" aria-label="Select a currency">
+      <div className="currency-picker__list" role="listbox" aria-label="Select a currency" ref={listRef}>
         {loading && <p className="currency-picker__note">Loading currencies…</p>}
 
         {!loading && matches.length === 0 && (
