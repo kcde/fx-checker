@@ -197,6 +197,70 @@
   appearance: none;
 }
 
+/* ─── Currency picker (anchored popover under the currency button) ─── */
+.currency-select {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.currency-btn svg {
+  transition: transform 0.15s ease;
+}
+.currency-btn--open svg {
+  transform: rotate(180deg);
+}
+
+.currency-picker {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  z-index: 200;
+  width: 300px;
+  max-width: min(90vw, 360px);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px;
+  background: var(--neutral-700);
+  border-radius: var(--radius-12);
+  box-shadow:
+    inset 0 0 0 1px var(--neutral-500),
+    0 12px 32px rgba(0, 0, 0, 0.5);
+}
+
+.currency-picker__list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  max-height: 320px;
+  overflow-y: auto;
+}
+
+.currency-picker__group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.currency-picker__group + .currency-picker__group {
+  margin-top: 8px;
+}
+
+.currency-picker__group-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  color: var(--neutral-200);
+  padding: 4px 8px;
+}
+
+.currency-picker__note {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--neutral-200);
+  padding: 12px 8px;
+  text-align: center;
+}
+
 /* ─── Rate row (lives inside .conv-group, below the divider) ─── */
 .converter__rate-row {
   display: flex;

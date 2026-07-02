@@ -1,7 +1,8 @@
 import Icon from "./Icon";
 
-export default function FavoriteButton({ state = "default" }) {
-  // states: default | active | icon
+export default function FavoriteButton({ state = "default", active, onClick }) {
+  // states: default | active | icon. `active`/`onClick` drive live behavior;
+  // `state` is kept for the design-system gallery.
   if (state === "icon") {
     return (
       <button type="button" className="fav-btn fav-btn--icon" aria-label="Favorite">
@@ -9,15 +10,15 @@ export default function FavoriteButton({ state = "default" }) {
       </button>
     );
   }
-  const active = state === "active";
+  const isActive = active ?? state === "active";
   return (
-    <button type="button" className="fav-btn">
+    <button type="button" className="fav-btn" onClick={onClick} aria-pressed={isActive}>
       <Icon
-        name={active ? "starFilled" : "starOutline"}
+        name={isActive ? "starFilled" : "starOutline"}
         size={16}
-        color={active ? "var(--lime-500)" : "var(--neutral-200)"}
+        color={isActive ? "var(--lime-500)" : "var(--neutral-200)"}
       />
-      <span>{active ? "FAVORITED" : "FAVORITE"}</span>
+      <span>{isActive ? "FAVORITED" : "FAVORITE"}</span>
     </button>
   );
 }

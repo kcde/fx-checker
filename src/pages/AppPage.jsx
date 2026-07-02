@@ -1,7 +1,9 @@
+import { useCallback, useEffect, useRef, useState } from 'react';
 import useRates from '../hooks/useRates';
+import useCurrencies from '../hooks/useCurrencies';
 import { useFxState, useFxDispatch } from '../state/useFx';
 import { convert, formatAmount, formatRate } from '../utils/format';
-import CurrencyButton from '../components/CurrencyButton';
+import CurrencySelect from '../components/CurrencySelect';
 import ExchangeButton from '../components/ExchangeButton';
 import FavoriteButton from '../components/FavoriteButton';
 import LogConversionButton from '../components/LogConversionButton';
@@ -22,11 +24,39 @@ export default function AppPage() {
   const { rates: tickerRates, loading } = useRates('USD', TICKER_QUOTES);
   // separate call for the active pair; fetchCached dedupes when base is USD
   const { rates: pairRates } = useRates(base, [quote]);
+  const { currencies, loading: currenciesLoading } = useCurrencies();
 
   const pairRate = pairRates?.[quote] ?? null;
   const converted = convert(parseFloat(amount), pairRate);
   // history reflects the user's activity: no live conversion, no chart
   const hasConversion = parseFloat(amount) > 0;
+
+  const isFavorited = favorites.some((f) => f.base === base && f.quote === quote);
+  const canLog = pairRate != null && parseFloat(amount) > 0;
+
+  // transient "Logged ✓" confirmation on the log button
+  const [logged, setLogged] = useState(false);
+  const loggedTimer = useRef(null);
+  useEffect(() => () => clearTimeout(loggedTimer.current), []);
+
+  const handleLog = useCallback(() => {
+    if (!canLog) return;
+    dispatch({
+      type: 'ADD_LOG',
+      entry: {
+        id: crypto.randomUUID(),
+        timestamp: Date.now(),
+        base,
+        quote,
+        sendAmount: parseFloat(amount),
+        receiveAmount: converted,
+        rate: pairRate,
+      },
+    });
+    setLogged(true);
+    clearTimeout(loggedTimer.current);
+    loggedTimer.current = setTimeout(() => setLogged(false), 1500);
+  }, [canLog, dispatch, base, quote, amount, converted, pairRate]);
 
   const tickerItems = TICKER_QUOTES.map((code) => ({
     pair: `USD/${code}`,
@@ -82,7 +112,13 @@ export default function AppPage() {
                       value={amount}
                       onChange={(e) => dispatch({ type: 'SET_AMOUNT', amount: e.target.value })}
                     />
-                    <CurrencyButton code={base} />
+                    <CurrencySelect
+                      code={base}
+                      currencies={currencies}
+                      loading={currenciesLoading}
+                      onSelect={(c) => dispatch({ type: 'SET_BASE', code: c })}
+                      label="Send currency"
+                    />
                   </div>
                 </div>
 
@@ -99,7 +135,13 @@ export default function AppPage() {
                       readOnly
                       value={converted != null ? formatAmount(converted) : ''}
                     />
-                    <CurrencyButton code={quote} />
+                    <CurrencySelect
+                      code={quote}
+                      currencies={currencies}
+                      loading={currenciesLoading}
+                      onSelect={(c) => dispatch({ type: 'SET_QUOTE', code: c })}
+                      label="Receive currency"
+                    />
                   </div>
                 </div>
 
@@ -116,8 +158,15 @@ export default function AppPage() {
                 </span>
               </div>
               <div className="converter__actions">
-                <FavoriteButton />
-                <LogConversionButton />
+                <FavoriteButton
+                  active={isFavorited}
+                  onClick={() => dispatch({ type: 'TOGGLE_FAVORITE', base, quote })}
+                />
+                <LogConversionButton
+                  state={logged ? 'pressed' : 'default'}
+                  disabled={!canLog}
+                  onClick={handleLog}
+                />
               </div>
             </div>
           </div>
