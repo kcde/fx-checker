@@ -31,6 +31,16 @@ export function relativeTime(timestamp) {
   return days === 1 ? '1 DAY AGO' : `${days} DAYS AGO`;
 }
 
+/* Compact relative time for the conversion log: 20M, 1H, then a date (13 May). */
+export function formatLogTime(timestamp) {
+  const minutes = Math.floor((Date.now() - timestamp) / 60000);
+  if (minutes < 1) return 'NOW';
+  if (minutes < 60) return `${minutes}M`;
+  const hours = Math.floor(minutes / 60);
+  if (hours < 24) return `${hours}H`;
+  return new Date(timestamp).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
+}
+
 /* Range stats over a rate-history series [{date, rate}, ...] (oldest first). */
 export function historyStats(points) {
   if (!points || points.length === 0) return null;

@@ -1,6 +1,6 @@
 import Icon from "./Icon";
 
-export default function LoggedItem({ time, base, quote, from, to, state = "default" }) {
+export default function LoggedItem({ time, base, quote, from, to, state = "default", onDelete }) {
   // states: default | hover
   return (
     <div className={`logged-item logged-item--${state}`}>
@@ -14,7 +14,7 @@ export default function LoggedItem({ time, base, quote, from, to, state = "defau
         <span className="logged-item__from">{from}</span>
         <span className="logged-item__to">{to}</span>
       </div>
-      <button type="button" className="icon-btn icon-btn--delete" aria-label="Delete">
+      <button type="button" className="icon-btn icon-btn--delete" aria-label="Delete" onClick={onDelete}>
         <Icon name="trash" width={14} height={16} color="var(--neutral-50)" />
       </button>
     </div>
