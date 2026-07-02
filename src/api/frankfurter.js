@@ -37,3 +37,12 @@ export async function getRateHistory(base, quote, from, to) {
   const raw = await fetchCached(url, 60 * 60 * 1000);
   return raw.map((r) => ({ date: r.date, rate: r.rate }));
 }
+
+// Historical range for several quotes at once. The API returns flat rows
+// ({ date, quote, rate }) spanning every day × quote, so one call yields both the
+// latest fixing and the prior day's for the whole ticker.
+export async function getRateSeries(base, quotes, from, to) {
+  const url = `${BASE}/v2/rates?from=${from}&to=${to}&base=${base}&quotes=${quotes.join(',')}`;
+  const raw = await fetchCached(url, 60 * 60 * 1000);
+  return raw.map((r) => ({ date: r.date, quote: r.quote, rate: r.rate }));
+}
