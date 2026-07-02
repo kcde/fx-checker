@@ -49,6 +49,8 @@ export function fxReducer(state, action) {
       return { ...state, quote: action.code };
 
     case 'SET_AMOUNT':
+      // reject negatives; empty string stays allowed so the field can be cleared
+      if (action.amount.startsWith('-')) return state;
       return { ...state, amount: action.amount };
 
     case 'SWAP':
