@@ -12,6 +12,8 @@ import HistoryPanel from '../components/HistoryPanel';
 import ComparePanel from '../components/ComparePanel';
 import FavoritesPanel from '../components/FavoritesPanel';
 import LogPanel from '../components/LogPanel';
+import MobileTabSelect from '../components/MobileTabSelect';
+import StateNotice from '../components/StateNotice';
 import Icon from '../components/Icon';
 import './app.css';
 
@@ -27,8 +29,8 @@ export default function AppPage() {
 
   const { items: tickerData, loading } = useMarketTicker('USD', TICKER_QUOTES);
   // separate call for the active pair; fetchCached dedupes when base is USD
-  const { rates: pairRates } = useRates(base, [quote]);
-  const { currencies, loading: currenciesLoading } = useCurrencies();
+  const { rates: pairRates, error: pairError } = useRates(base, [quote]);
+  const { currencies, loading: currenciesLoading, error: currenciesError } = useCurrencies();
 
   const pairRate = pairRates?.[quote] ?? null;
   const converted = convert(parseFloat(amount), pairRate);
@@ -74,29 +76,48 @@ export default function AppPage() {
 
   const doubled = [...tickerItems, ...tickerItems];
 
+  const currencyCount = Object.keys(currencies ?? {}).length;
+  const navMeta = currencyCount
+    ? `${currencyCount} CURRENCIES · EOD · ECB DATA`
+    : 'EOD · ECB DATA';
+
   return (
     <div className="app">
 
       {/* ─── Navbar ─── */}
       <header className="app-nav">
-        <div className="app-nav__brand">
-          <Icon name="logo" size={20} color="var(--lime-500)" />
-          <span className="app-nav__wordmark">FX_CHECKER</span>
+        <div className="app-nav__top">
+          <div className="app-nav__brand">
+            <Icon name="logo" size={20} color="var(--lime-500)" />
+            <span className="app-nav__wordmark">FX_CHECKER</span>
+          </div>
+          <span className="app-nav__meta">{navMeta}</span>
         </div>
-        <div className="app-nav__ticker-wrap">
-          <div className={`app-nav__ticker${loading ? ' app-nav__ticker--paused' : ''}`}>
-            {doubled.map((item, i) => (
-              <div key={i} className="ticker-chip">
-                <span className="ticker-chip__pair">{item.pair}</span>
-                <span className="ticker-chip__rate">{item.rate}</span>
-                <span className={`ticker-chip__change--${item.up ? 'up' : 'down'}`}>
-                  {item.up ? '▲' : '▼'} {item.change}
-                </span>
-              </div>
-            ))}
+        <div className="app-nav__markets">
+          <span className="app-nav__live">
+            <span className="app-nav__dot" /> LIVE MARKETS
+          </span>
+          <div className="app-nav__ticker-wrap">
+            <div className={`app-nav__ticker${loading ? ' app-nav__ticker--paused' : ''}`}>
+              {doubled.map((item, i) => (
+                <div key={i} className="ticker-chip">
+                  <span className="ticker-chip__pair">{item.pair}</span>
+                  <span className="ticker-chip__rate">{item.rate}</span>
+                  <span className={`ticker-chip__change--${item.up ? 'up' : 'down'}`}>
+                    {item.up ? '▲' : '▼'} {item.change}
+                  </span>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </header>
+
+      {currenciesError && (
+        <div className="app-offline" role="alert">
+          Couldn&apos;t reach the rates service — showing what&apos;s available.
+        </div>
+      )}
 
       <div className="app-body">
 
@@ -162,7 +183,11 @@ export default function AppPage() {
             <div className="converter__rate-row">
               <div className="converter__rate-info">
                 <span className="converter__rate-label">
-                  {pairRate != null ? `1 ${base} = ${formatRate(pairRate)} ${quote}` : '—'}
+                  {pairError
+                    ? 'RATE UNAVAILABLE'
+                    : pairRate != null
+                      ? `1 ${base} = ${formatRate(pairRate)} ${quote}`
+                      : '—'}
                 </span>
               </div>
               <div className="converter__actions">
@@ -190,10 +215,12 @@ export default function AppPage() {
           onSelect={(tab) => dispatch({ type: 'SET_TAB', tab })}
         />
         <div className="app-tabbar__mobile">
-          <div className="mobile-selector">
-            <span className="mobile-selector__label">{activeTab.toUpperCase()}</span>
-            <Icon name="chevronDown" size={12} color="var(--neutral-200)" />
-          </div>
+          <MobileTabSelect
+            tabs={TABS}
+            activeTab={activeTab}
+            counts={{ favorites: favorites.length, log: log.length }}
+            onSelect={(tab) => dispatch({ type: 'SET_TAB', tab })}
+          />
         </div>
       </div>
 
@@ -270,15 +297,5 @@ function AppTabBar({ activeTab, favoritesCount, logCount, onSelect }) {
 }
 
 function TabEmptyState({ title, desc, icon = 'trash' }) {
-  return (
-    <div className="empty-state">
-      <div className="empty-state__icon-box">
-        <Icon name={icon} size={13} color="var(--neutral-200)" style={{ opacity: 0.4 }} />
-      </div>
-      <div className="empty-state__text">
-        <span className="empty-state__title">{title}</span>
-        <span className="empty-state__desc">{desc}</span>
-      </div>
-    </div>
-  );
+  return <StateNotice tone="empty" title={title} desc={desc} icon={icon} />;
 }

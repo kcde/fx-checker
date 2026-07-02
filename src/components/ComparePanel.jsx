@@ -3,6 +3,7 @@ import useRates from '../hooks/useRates';
 import useCurrencies from '../hooks/useCurrencies';
 import { convert, formatAmount, formatRate } from '../utils/format';
 import CompareItem from './CompareItem';
+import StateNotice from './StateNotice';
 
 // Fixed set of majors to compare against (matches the design). The current base is
 // filtered out so a pair never compares a currency with itself.
@@ -13,7 +14,7 @@ export default function ComparePanel() {
   const dispatch = useFxDispatch();
 
   const quotes = COMPARE_QUOTES.filter((c) => c !== base);
-  const { rates } = useRates(base, quotes);
+  const { rates, error } = useRates(base, quotes);
   const { currencies } = useCurrencies();
 
   const amt = parseFloat(amount);
@@ -29,6 +30,13 @@ export default function ComparePanel() {
         <span className="compare-panel__count">{quotes.length} PAIRS</span>
       </div>
 
+      {error && !rates ? (
+        <StateNotice
+          tone="error"
+          title="COULDN'T LOAD RATES"
+          desc="Check your connection and try again."
+        />
+      ) : (
       <div className="compare-panel__list">
         {quotes.map((code) => {
           const rate = rates?.[code] ?? null;
@@ -47,6 +55,7 @@ export default function ComparePanel() {
           );
         })}
       </div>
+      )}
     </div>
   );
 }
