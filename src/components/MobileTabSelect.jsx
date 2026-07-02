@@ -6,6 +6,7 @@ import Icon from './Icon';
 export default function MobileTabSelect({ tabs, activeTab, counts = {}, onSelect }) {
   const [open, setOpen] = useState(false);
   const containerRef = useRef(null);
+  const menuRef = useRef(null);
 
   useEffect(() => {
     if (!open) return;
@@ -15,11 +16,28 @@ export default function MobileTabSelect({ tabs, activeTab, counts = {}, onSelect
     const onKey = (e) => { if (e.key === 'Escape') setOpen(false); };
     document.addEventListener('mousedown', onDown);
     document.addEventListener('keydown', onKey);
+    // move focus to the selected option when the menu opens
+    menuRef.current?.querySelector('[aria-selected="true"]')?.focus();
     return () => {
       document.removeEventListener('mousedown', onDown);
       document.removeEventListener('keydown', onKey);
     };
   }, [open]);
+
+  // roving focus over the option buttons
+  const onMenuKeyDown = (e) => {
+    if (!['ArrowDown', 'ArrowUp', 'Home', 'End'].includes(e.key)) return;
+    const opts = Array.from(menuRef.current?.querySelectorAll('[role="option"]') ?? []);
+    if (opts.length === 0) return;
+    e.preventDefault();
+    const idx = opts.indexOf(document.activeElement);
+    let next;
+    if (e.key === 'Home') next = 0;
+    else if (e.key === 'End') next = opts.length - 1;
+    else if (e.key === 'ArrowDown') next = idx < 0 ? 0 : (idx + 1) % opts.length;
+    else next = idx <= 0 ? opts.length - 1 : idx - 1;
+    opts[next]?.focus();
+  };
 
   const active = tabs.find((t) => t.id === activeTab);
 
@@ -40,7 +58,7 @@ export default function MobileTabSelect({ tabs, activeTab, counts = {}, onSelect
       </button>
 
       {open && (
-        <div className="mobile-tabs__menu" role="listbox">
+        <div className="mobile-tabs__menu" role="listbox" ref={menuRef} onKeyDown={onMenuKeyDown}>
           {tabs.map((t) => (
             <button
               key={t.id}
