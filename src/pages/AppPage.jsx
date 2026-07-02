@@ -1,8 +1,11 @@
 import useRates from '../hooks/useRates';
+import { useFxState, useFxDispatch } from '../state/useFx';
+import { convert, formatAmount, formatRate } from '../utils/format';
 import CurrencyButton from '../components/CurrencyButton';
 import ExchangeButton from '../components/ExchangeButton';
 import FavoriteButton from '../components/FavoriteButton';
 import LogConversionButton from '../components/LogConversionButton';
+import HistoryPanel from '../components/HistoryPanel';
 import Icon from '../components/Icon';
 import './app.css';
 
@@ -12,17 +15,22 @@ const TICKER_QUOTES = [
   'NOK','DKK','PLN',
 ];
 
-function formatRate(val) {
-  if (val == null) return '—';
-  return val < 10 ? val.toFixed(4) : val.toFixed(2);
-}
-
 export default function AppPage() {
-  const { rates, loading } = useRates('USD', TICKER_QUOTES);
+  const { base, quote, amount, activeTab, favorites, log } = useFxState();
+  const dispatch = useFxDispatch();
 
-  const tickerItems = TICKER_QUOTES.map((quote) => ({
-    pair: `USD/${quote}`,
-    rate: rates ? formatRate(rates[quote]) : '—',
+  const { rates: tickerRates, loading } = useRates('USD', TICKER_QUOTES);
+  // separate call for the active pair; fetchCached dedupes when base is USD
+  const { rates: pairRates } = useRates(base, [quote]);
+
+  const pairRate = pairRates?.[quote] ?? null;
+  const converted = convert(parseFloat(amount), pairRate);
+  // history reflects the user's activity: no live conversion, no chart
+  const hasConversion = parseFloat(amount) > 0;
+
+  const tickerItems = TICKER_QUOTES.map((code) => ({
+    pair: `USD/${code}`,
+    rate: tickerRates ? formatRate(tickerRates[code]) : '—',
     up: true,
   }));
 
@@ -71,12 +79,14 @@ export default function AppPage() {
                       type="number"
                       placeholder="0.00"
                       min="0"
+                      value={amount}
+                      onChange={(e) => dispatch({ type: 'SET_AMOUNT', amount: e.target.value })}
                     />
-                    <CurrencyButton code="USD" />
+                    <CurrencyButton code={base} />
                   </div>
                 </div>
 
-                <ExchangeButton />
+                <ExchangeButton onClick={() => dispatch({ type: 'SWAP' })} />
 
                 {/* RECEIVE */}
                 <div className="conv-card">
@@ -84,11 +94,12 @@ export default function AppPage() {
                   <div className="conv-card__bottom">
                     <input
                       className="conv-card__input conv-card__input--result"
-                      type="number"
+                      type="text"
                       placeholder="0.00"
                       readOnly
+                      value={converted != null ? formatAmount(converted) : ''}
                     />
-                    <CurrencyButton code="EUR" />
+                    <CurrencyButton code={quote} />
                   </div>
                 </div>
 
@@ -101,7 +112,7 @@ export default function AppPage() {
             <div className="converter__rate-row">
               <div className="converter__rate-info">
                 <span className="converter__rate-label">
-                  {rates?.EUR ? `1 USD = ${formatRate(rates.EUR)} EUR` : '—'}
+                  {pairRate != null ? `1 ${base} = ${formatRate(pairRate)} ${quote}` : '—'}
                 </span>
               </div>
               <div className="converter__actions">
@@ -115,32 +126,51 @@ export default function AppPage() {
 
       {/* ─── Tab bar ─── */}
       <div className="app-tabbar">
-        <AppTabBar />
+        <AppTabBar
+          activeTab={activeTab}
+          favoritesCount={favorites.length}
+          logCount={log.length}
+          onSelect={(tab) => dispatch({ type: 'SET_TAB', tab })}
+        />
         <div className="app-tabbar__mobile">
           <div className="mobile-selector">
-            <span className="mobile-selector__label">HISTORY</span>
+            <span className="mobile-selector__label">{activeTab.toUpperCase()}</span>
             <Icon name="chevronDown" size={12} color="var(--neutral-200)" />
           </div>
         </div>
       </div>
 
-      {/* ─── History (default) ─── */}
+      {/* ─── Tab panels ─── */}
       <div className="tab-content">
-        <div className="history-header">
-          <span className="history-header__count">0 CONVERSIONS</span>
-          <button type="button" className="history-header__clear">CLEAR ALL</button>
-        </div>
-        <div className="empty-state">
-          <div className="empty-state__icon-box">
-            <Icon name="trash" size={13} color="var(--neutral-200)" style={{ opacity: 0.4 }} />
-          </div>
-          <div className="empty-state__text">
-            <span className="empty-state__title">NO CONVERSIONS YET</span>
-            <span className="empty-state__desc">
-              Enter an amount above and press LOG CONVERSION to save it here.
-            </span>
-          </div>
-        </div>
+        {activeTab === 'history' && (
+          hasConversion ? (
+            <HistoryPanel />
+          ) : (
+            <TabEmptyState
+              icon="exchange"
+              title="NO CONVERSION YET"
+              desc="Enter an amount above to check a rate — its history will show here."
+            />
+          )
+        )}
+        {activeTab === 'compare' && (
+          <TabEmptyState
+            title="COMPARE COMING SOON"
+            desc="Compare your send amount across several currencies at once."
+          />
+        )}
+        {activeTab === 'favorites' && (
+          <TabEmptyState
+            title="NO FAVORITES YET"
+            desc="Pin a currency pair with the FAVORITE button to track it here."
+          />
+        )}
+        {activeTab === 'log' && (
+          <TabEmptyState
+            title="NO CONVERSIONS YET"
+            desc="Enter an amount above and press LOG CONVERSION to save it here."
+          />
+        )}
       </div>
 
       </div> {/* end app-body */}
@@ -148,24 +178,47 @@ export default function AppPage() {
   );
 }
 
-function AppTabBar() {
-  const tabs = [
-    { label: 'HISTORY', count: 0 },
-    { label: 'COMPARE' },
-    { label: 'FAVORITES', count: 0 },
-    { label: 'LOG', count: 0 },
-  ];
+const TABS = [
+  { id: 'history', label: 'HISTORY' },
+  { id: 'compare', label: 'COMPARE' },
+  { id: 'favorites', label: 'FAVORITES' },
+  { id: 'log', label: 'LOG' },
+];
+
+function AppTabBar({ activeTab, favoritesCount, logCount, onSelect }) {
+  const counts = { favorites: favoritesCount, log: logCount };
   return (
-    <div className="tabbar">
-      {tabs.map((t, i) => (
-        <button key={t.label} type="button" className="tabbar__tab">
+    <div className="tabbar" role="tablist">
+      {TABS.map((t) => (
+        <button
+          key={t.id}
+          type="button"
+          className="tabbar__tab"
+          role="tab"
+          aria-selected={activeTab === t.id}
+          onClick={() => onSelect(t.id)}
+        >
           <span className="tabbar__inner">
             <span className="tabbar__label">{t.label}</span>
-            {t.count != null && <span className="tabbar__count">{t.count}</span>}
+            {counts[t.id] != null && <span className="tabbar__count">{counts[t.id]}</span>}
           </span>
-          {i === 0 && <span className="tabbar__underline" />}
+          {activeTab === t.id && <span className="tabbar__underline" />}
         </button>
       ))}
+    </div>
+  );
+}
+
+function TabEmptyState({ title, desc, icon = 'trash' }) {
+  return (
+    <div className="empty-state">
+      <div className="empty-state__icon-box">
+        <Icon name={icon} size={13} color="var(--neutral-200)" style={{ opacity: 0.4 }} />
+      </div>
+      <div className="empty-state__text">
+        <span className="empty-state__title">{title}</span>
+        <span className="empty-state__desc">{desc}</span>
+      </div>
     </div>
   );
 }
