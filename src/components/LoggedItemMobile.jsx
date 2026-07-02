@@ -1,6 +1,6 @@
 import Icon from "./Icon";
 
-export default function LoggedItemMobile({ time, base, quote, from, to }) {
+export default function LoggedItemMobile({ time, base, quote, from, to, onDelete }) {
   return (
     <div className="logged-item-m">
       <div className="logged-item-m__info">
@@ -15,7 +15,7 @@ export default function LoggedItemMobile({ time, base, quote, from, to }) {
         <span className="logged-item__from">{from}</span>
         <span className="logged-item__to">{to}</span>
       </div>
-      <button type="button" className="icon-btn icon-btn--delete" aria-label="Delete">
+      <button type="button" className="icon-btn icon-btn--delete" aria-label="Delete" onClick={onDelete}>
         <Icon name="trash" width={14} height={16} color="var(--neutral-50)" />
       </button>
     </div>

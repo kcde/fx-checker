@@ -516,6 +516,13 @@ button {
   gap: var(--spacing-250);
   padding: var(--spacing-150) var(--spacing-200);
 }
+.fav-item[role="button"] {
+  cursor: pointer;
+}
+.fav-item:hover,
+.logged-item:hover {
+  box-shadow: inset 0 0 0 1px var(--neutral-300);
+}
 .fav-item__pair {
   display: flex;
   align-items: center;

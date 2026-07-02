@@ -53,6 +53,10 @@ export function fxReducer(state, action) {
       if (action.amount.startsWith('-')) return state;
       return { ...state, amount: action.amount };
 
+    case 'SET_PAIR':
+      // load both currencies at once (e.g. selecting a favorite) — no collision swap
+      return { ...state, base: action.base, quote: action.quote };
+
     case 'SWAP':
       return { ...state, base: state.quote, quote: state.base };
 

@@ -10,6 +10,8 @@ import FavoriteButton from '../components/FavoriteButton';
 import LogConversionButton from '../components/LogConversionButton';
 import HistoryPanel from '../components/HistoryPanel';
 import ComparePanel from '../components/ComparePanel';
+import FavoritesPanel from '../components/FavoritesPanel';
+import LogPanel from '../components/LogPanel';
 import Icon from '../components/Icon';
 import './app.css';
 
@@ -210,16 +212,24 @@ export default function AppPage() {
         )}
         {activeTab === 'compare' && <ComparePanel />}
         {activeTab === 'favorites' && (
-          <TabEmptyState
-            title="NO FAVORITES YET"
-            desc="Pin a currency pair with the FAVORITE button to track it here."
-          />
+          favorites.length ? (
+            <FavoritesPanel />
+          ) : (
+            <TabEmptyState
+              title="NO FAVORITES YET"
+              desc="Pin a currency pair with the FAVORITE button to track it here."
+            />
+          )
         )}
         {activeTab === 'log' && (
-          <TabEmptyState
-            title="NO CONVERSIONS YET"
-            desc="Enter an amount above and press LOG CONVERSION to save it here."
-          />
+          log.length ? (
+            <LogPanel />
+          ) : (
+            <TabEmptyState
+              title="NO CONVERSIONS YET"
+              desc="Enter an amount above and press LOG CONVERSION to save it here."
+            />
+          )
         )}
       </div>
 
