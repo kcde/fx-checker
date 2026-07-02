@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import "./App.css";
 import "./components/components.css";
 
+import AppPage from "./pages/AppPage";
 import DesignSystemPage from "./pages/DesignSystemPage";
 import ComponentsPage from "./pages/ComponentsPage";
 
@@ -17,5 +18,7 @@ function useHashRoute() {
 
 export default function App() {
   const hash = useHashRoute();
-  return hash === "#/components" ? <ComponentsPage /> : <DesignSystemPage />;
+  return hash === "#/components" ? <ComponentsPage />
+       : hash === "#/design"     ? <DesignSystemPage />
+       : <AppPage />;
 }

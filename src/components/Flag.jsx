@@ -1,29 +1,19 @@
-import flagUS from "../assets/flags/flag-us.png";
-import flagEU from "../assets/flags/flag-eu.png";
-import flagGB from "../assets/flags/flag-gb.png";
-import flagJP from "../assets/flags/flag-jp.svg";
-
-const FLAGS = {
-  USD: flagUS,
-  EUR: flagEU,
-  GBP: flagGB,
-  JPY: flagJP,
-};
+import { getFlagCode } from '../utils/flagMap';
 
 export default function Flag({ code, size = 20 }) {
-  const src = FLAGS[code];
+  const cc = getFlagCode(code);
+  if (!cc) return <span style={{ width: size, height: size, display: 'block', flexShrink: 0 }} />;
   return (
     <img
-      src={src}
+      src={`https://flagcdn.com/w40/${cc}.png`}
+      srcSet={`https://flagcdn.com/w80/${cc}.png 2x`}
       alt={code}
       width={size}
       height={size}
       style={{
-        width: size,
-        height: size,
-        borderRadius: "var(--radius-full)",
-        objectFit: "cover",
-        display: "block",
+        borderRadius: 'var(--radius-full)',
+        objectFit: 'cover',
+        display: 'block',
         flexShrink: 0,
       }}
     />
