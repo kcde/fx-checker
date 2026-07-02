@@ -259,9 +259,16 @@
   opacity: 0.3;
 }
 
+/* hide the native number spinner: WebKit uses the spin-button pseudo-elements,
+   Firefox uses appearance: textfield on the input itself */
+.conv-card__input[type=number] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
 .conv-card__input[type=number]::-webkit-inner-spin-button,
 .conv-card__input[type=number]::-webkit-outer-spin-button {
   appearance: none;
+  margin: 0;
 }
 
 /* ─── Currency picker (anchored popover under the currency button) ─── */
