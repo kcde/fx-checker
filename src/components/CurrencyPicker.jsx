@@ -63,13 +63,19 @@ export default function CurrencyPicker({ currencies, selected, onSelect, loading
             <>
               {popular.length > 0 && (
                 <div className="currency-picker__group" role="group" aria-label="Popular">
-                  <p className="currency-picker__group-label">POPULAR</p>
+                  <p className="currency-picker__group-label">
+                    <span>POPULAR</span>
+                    <span className="currency-picker__group-count">{popular.length}</span>
+                  </p>
                   {popular.map(renderRow)}
                 </div>
               )}
               {other.length > 0 && (
                 <div className="currency-picker__group" role="group" aria-label="Other currencies">
-                  <p className="currency-picker__group-label">OTHER CURRENCIES</p>
+                  <p className="currency-picker__group-label">
+                    <span>OTHER CURRENCIES</span>
+                    <span className="currency-picker__group-count">{other.length}</span>
+                  </p>
                   {other.map(renderRow)}
                 </div>
               )}

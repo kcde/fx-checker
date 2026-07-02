@@ -2,11 +2,12 @@ import { useFxState, useFxDispatch } from '../state/useFx';
 import useFavoriteRates from '../hooks/useFavoriteRates';
 import { formatRate } from '../utils/format';
 import FavoritesItem from './FavoritesItem';
+import StateNotice from './StateNotice';
 
 export default function FavoritesPanel() {
   const { favorites } = useFxState();
   const dispatch = useFxDispatch();
-  const { rateMap } = useFavoriteRates(favorites);
+  const { rateMap, error } = useFavoriteRates(favorites);
 
   return (
     <div className="favorites-panel">
@@ -14,6 +15,10 @@ export default function FavoritesPanel() {
         <span className="favorites-panel__title">PINNED PAIRS</span>
         <span className="favorites-panel__count">{favorites.length} FAVORITES</span>
       </div>
+
+      {error && (
+        <StateNotice tone="error" title="LIVE RATES UNAVAILABLE" />
+      )}
 
       <div className="favorites-panel__list">
         {favorites.map((f) => {

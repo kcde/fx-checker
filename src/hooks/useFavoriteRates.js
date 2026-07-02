@@ -19,7 +19,7 @@ function recentWindow() {
    synchronously in the effect. */
 export default function useFavoriteRates(favorites = []) {
   const key = favorites.map((f) => `${f.base}/${f.quote}`).join(',');
-  const [result, setResult] = useState({ key: '', rateMap: {} });
+  const [result, setResult] = useState({ key: '', rateMap: {}, error: null });
 
   useEffect(() => {
     if (favorites.length === 0) return;
@@ -53,9 +53,9 @@ export default function useFavoriteRates(favorites = []) {
             map[`${base}/${quote}`] = { rate, pct, direction: pct >= 0 ? 'up' : 'down' };
           }
         });
-        setResult({ key, rateMap: map });
+        setResult({ key, rateMap: map, error: null });
       })
-      .catch(() => { if (!cancelled) setResult({ key, rateMap: {} }); });
+      .catch((err) => { if (!cancelled) setResult({ key, rateMap: {}, error: err }); });
 
     return () => { cancelled = true; };
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -65,5 +65,6 @@ export default function useFavoriteRates(favorites = []) {
   return {
     rateMap: isCurrent ? result.rateMap : {},
     loading: favorites.length > 0 && !isCurrent,
+    error: isCurrent ? result.error : null,
   };
 }

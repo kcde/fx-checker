@@ -11,7 +11,7 @@
   color: var(--neutral-50);
 }
 
-/* ─── Navbar ─── */
+/* ─── Navbar (two strips: brand/meta, then live-markets ticker) ─── */
 .app-nav {
   position: sticky;
   top: 0;
@@ -19,17 +19,22 @@
   background: var(--neutral-900);
   border-bottom: 1px solid var(--neutral-600);
   display: flex;
-  align-items: stretch;
-  height: 60px;
-  overflow: hidden;
+  flex-direction: column;
+}
+
+.app-nav__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 44px;
+  padding: 0 20px;
+  border-bottom: 1px solid var(--neutral-600);
 }
 
 .app-nav__brand {
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 0 28px;
-  border-right: 1px solid var(--neutral-600);
   flex-shrink: 0;
 }
 
@@ -37,6 +42,44 @@
   font-weight: 700;
   font-size: 14px;
   letter-spacing: 1.5px;
+}
+
+.app-nav__meta {
+  min-width: 0;
+  padding-left: 12px;
+  font-size: 10px;
+  letter-spacing: 1px;
+  color: var(--neutral-200);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.app-nav__markets {
+  display: flex;
+  align-items: stretch;
+  height: 44px;
+  overflow: hidden;
+}
+
+.app-nav__live {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+  padding: 0 16px;
+  background: var(--lime-500);
+  color: var(--neutral-900);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.app-nav__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--neutral-900);
 }
 
 .app-nav__ticker-wrap {
@@ -62,9 +105,9 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 0 24px;
+  padding: 0 20px;
   border-right: 1px solid var(--neutral-600);
-  height: 60px;
+  height: 44px;
   flex-shrink: 0;
 }
 
@@ -246,11 +289,19 @@
 }
 
 .currency-picker__group-label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   font-family: var(--font-mono);
   font-size: 10px;
   letter-spacing: 1.5px;
   color: var(--neutral-200);
   padding: 4px 8px;
+}
+
+.currency-picker__group-count {
+  color: var(--neutral-400);
+  letter-spacing: 0.5px;
 }
 
 .currency-picker__note {
@@ -379,6 +430,44 @@
   color: var(--neutral-400);
   max-width: 280px;
   line-height: 1.6;
+}
+
+/* ─── Inline panel error notice (rates failed to load) ─── */
+.panel-notice {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 32px 20px;
+  text-align: center;
+  background: var(--neutral-700);
+  border-radius: var(--radius-12);
+  box-shadow: inset 0 0 0 1px var(--neutral-600);
+}
+
+.panel-notice__title {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 1px;
+  color: var(--red-500);
+}
+
+.panel-notice__desc {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  color: var(--neutral-400);
+}
+
+/* ─── Offline banner (currencies fetch failed) ─── */
+.app-offline {
+  padding: 10px 20px;
+  background: var(--neutral-700);
+  border-bottom: 1px solid var(--neutral-600);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.5px;
+  color: var(--red-500);
+  text-align: center;
 }
 
 /* ─── History panel ─── */
@@ -602,6 +691,79 @@
   padding: 12px 0;
 }
 
+/* ─── Mobile tab dropdown ─── */
+.mobile-tabs {
+  position: relative;
+  width: 100%;
+}
+
+.mobile-selector {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  background: var(--neutral-700);
+  border: none;
+  border-radius: var(--radius-8);
+  box-shadow: inset 0 0 0 1px var(--neutral-600);
+  cursor: pointer;
+}
+
+.mobile-selector__label {
+  flex: 1;
+  text-align: left;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 1px;
+  color: var(--neutral-50);
+}
+
+.mobile-selector svg {
+  transition: transform 0.15s ease;
+}
+.mobile-selector--open svg {
+  transform: rotate(180deg);
+}
+
+.mobile-tabs__menu {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  z-index: 200;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 6px;
+  background: var(--neutral-700);
+  border-radius: var(--radius-8);
+  box-shadow: inset 0 0 0 1px var(--neutral-500), 0 12px 32px rgba(0, 0, 0, 0.5);
+}
+
+.mobile-tabs__option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  border: none;
+  background: transparent;
+  border-radius: var(--radius-6);
+  cursor: pointer;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 1px;
+  color: var(--neutral-200);
+  text-align: left;
+}
+.mobile-tabs__option span:first-child {
+  flex: 1;
+}
+.mobile-tabs__option--active {
+  background: var(--neutral-500);
+  color: var(--neutral-50);
+}
+
 /* ─── Tablet ≤ 768px ─── */
 @media (max-width: 768px) {
   .app-body           { padding: 0 32px; }
@@ -615,19 +777,27 @@
 
 /* ─── Mobile ≤ 480px ─── */
 @media (max-width: 480px) {
-  .app-nav__ticker-wrap { display: none; }
+  .app-nav__top         { height: 40px; padding: 0 16px; }
+  .app-nav__meta        { font-size: 9px; letter-spacing: 0.5px; }
 
   .app-body             { padding: 0 16px; }
   .converter            { padding: 20px 0; }
   .converter__row       { flex-direction: column; align-items: stretch; }
   .icon-btn--exchange   { align-self: center; }
+  .icon-btn--exchange svg { transform: rotate(90deg); }
   .conv-card__input     { font-size: 28px; }
 
   .converter__rate-row  { flex-direction: column; align-items: flex-start; gap: 10px; }
   .converter__actions   { width: 100%; justify-content: flex-end; }
 
   .app-tabbar .tabbar   { display: none; }
-  .app-tabbar__mobile   { display: flex; padding: 12px 0; }
+  .app-tabbar__mobile   { display: block; padding: 12px 0; }
+
+  /* currency picker: span the full card instead of a button-anchored popover */
+  .conv-card            { position: relative; }
+  .currency-select      { position: static; }
+  .currency-picker      { left: 0; right: 0; width: auto; max-width: none; top: calc(100% + 8px); }
+  .currency-picker__list { max-height: 60vh; }
 
   .tab-content          { padding: 20px 0 80px; }
 
