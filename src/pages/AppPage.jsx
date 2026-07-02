@@ -9,6 +9,7 @@ import ExchangeButton from '../components/ExchangeButton';
 import FavoriteButton from '../components/FavoriteButton';
 import LogConversionButton from '../components/LogConversionButton';
 import HistoryPanel from '../components/HistoryPanel';
+import ComparePanel from '../components/ComparePanel';
 import Icon from '../components/Icon';
 import './app.css';
 
@@ -207,12 +208,7 @@ export default function AppPage() {
             />
           )
         )}
-        {activeTab === 'compare' && (
-          <TabEmptyState
-            title="COMPARE COMING SOON"
-            desc="Compare your send amount across several currencies at once."
-          />
-        )}
+        {activeTab === 'compare' && <ComparePanel />}
         {activeTab === 'favorites' && (
           <TabEmptyState
             title="NO FAVORITES YET"

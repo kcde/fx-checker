@@ -279,6 +279,12 @@ button {
   height: 32px;
   border-radius: var(--radius-8);
 }
+.icon-btn--favorited {
+  box-shadow: inset 0 0 0 1px var(--lime-500);
+}
+.icon-btn--delete:hover {
+  background: var(--neutral-500);
+}
 
 /* ===================== Live Rate Chip ===================== */
 .chip {
@@ -461,6 +467,9 @@ button {
 .compare-item {
   gap: var(--spacing-250);
   padding: var(--spacing-150) var(--spacing-200);
+}
+.compare-item:hover {
+  box-shadow: inset 0 0 0 1px var(--neutral-300);
 }
 .compare-item--active {
   background: var(--neutral-600);
