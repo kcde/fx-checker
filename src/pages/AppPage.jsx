@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import useRates from '../hooks/useRates';
+import useMarketTicker from '../hooks/useMarketTicker';
 import useCurrencies from '../hooks/useCurrencies';
 import { useFxState, useFxDispatch } from '../state/useFx';
 import { convert, formatAmount, formatRate } from '../utils/format';
@@ -21,7 +22,7 @@ export default function AppPage() {
   const { base, quote, amount, activeTab, favorites, log } = useFxState();
   const dispatch = useFxDispatch();
 
-  const { rates: tickerRates, loading } = useRates('USD', TICKER_QUOTES);
+  const { items: tickerData, loading } = useMarketTicker('USD', TICKER_QUOTES);
   // separate call for the active pair; fetchCached dedupes when base is USD
   const { rates: pairRates } = useRates(base, [quote]);
   const { currencies, loading: currenciesLoading } = useCurrencies();
@@ -58,11 +59,15 @@ export default function AppPage() {
     loggedTimer.current = setTimeout(() => setLogged(false), 1500);
   }, [canLog, dispatch, base, quote, amount, converted, pairRate]);
 
-  const tickerItems = TICKER_QUOTES.map((code) => ({
-    pair: `USD/${code}`,
-    rate: tickerRates ? formatRate(tickerRates[code]) : '—',
-    up: true,
-  }));
+  const tickerItems = tickerData.map((it) => {
+    const up = it.direction === 'up';
+    return {
+      pair: `USD/${it.quote}`,
+      rate: it.rate != null ? formatRate(it.rate) : '—',
+      up,
+      change: `${up ? '+' : ''}${it.pct.toFixed(2)}%`,
+    };
+  });
 
   const doubled = [...tickerItems, ...tickerItems];
 
@@ -82,7 +87,7 @@ export default function AppPage() {
                 <span className="ticker-chip__pair">{item.pair}</span>
                 <span className="ticker-chip__rate">{item.rate}</span>
                 <span className={`ticker-chip__change--${item.up ? 'up' : 'down'}`}>
-                  {item.up ? '▲' : '▼'}
+                  {item.up ? '▲' : '▼'} {item.change}
                 </span>
               </div>
             ))}
