@@ -8,6 +8,7 @@ export default function CompareItem({
   rate,
   state = "default",
   favorited = false,
+  onFavorite,
 }) {
   // states: default | hover | active
   const hover = state === "hover";
@@ -24,8 +25,10 @@ export default function CompareItem({
       </div>
       <button
         type="button"
-        className={`icon-btn icon-btn--delete${hover ? " icon-btn--hover" : ""}`}
+        className={`icon-btn icon-btn--delete${hover ? " icon-btn--hover" : ""}${favorited ? " icon-btn--favorited" : ""}`}
         aria-label="Favorite"
+        aria-pressed={favorited}
+        onClick={onFavorite}
       >
         <Icon
           name={favorited ? "starFilled" : "starOutline"}

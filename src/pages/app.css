@@ -388,6 +388,43 @@
   gap: 20px;
 }
 
+/* ─── Compare panel ─── */
+.compare-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.compare-panel__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 8px 8px;
+}
+
+.compare-panel__title {
+  font-size: 12px;
+  letter-spacing: 1px;
+  color: var(--neutral-200);
+}
+
+.compare-panel__title strong {
+  font-weight: 700;
+  color: var(--neutral-50);
+}
+
+.compare-panel__count {
+  font-size: 11px;
+  letter-spacing: 1px;
+  color: var(--neutral-200);
+}
+
+.compare-panel__list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
 .history-panel__top {
   display: flex;
   align-items: stretch;
