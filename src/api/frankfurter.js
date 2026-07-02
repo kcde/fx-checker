@@ -33,11 +33,7 @@ export async function getLatestRates(base, quotes = []) {
 
 export async function getRateHistory(base, quote, from, to) {
   const url = `${BASE}/v2/rates?from=${from}&to=${to}&base=${base}&quotes=${quote}`;
-  const res = await fetch(url);
-  if (!res.ok) {
-    const body = await res.json().catch(() => ({}));
-    throw { message: body.message ?? res.statusText, status: res.status };
-  }
-  const raw = await res.json();
+  // past rates are immutable; 1h TTL only bounds how late today's fixing appears
+  const raw = await fetchCached(url, 60 * 60 * 1000);
   return raw.map((r) => ({ date: r.date, rate: r.rate }));
 }

@@ -5,6 +5,7 @@ import "./components/components.css";
 import AppPage from "./pages/AppPage";
 import DesignSystemPage from "./pages/DesignSystemPage";
 import ComponentsPage from "./pages/ComponentsPage";
+import FxProvider from "./state/FxProvider";
 
 function useHashRoute() {
   const [hash, setHash] = useState(() => window.location.hash);
@@ -20,5 +21,5 @@ export default function App() {
   const hash = useHashRoute();
   return hash === "#/components" ? <ComponentsPage />
        : hash === "#/design"     ? <DesignSystemPage />
-       : <AppPage />;
+       : <FxProvider><AppPage /></FxProvider>;
 }
