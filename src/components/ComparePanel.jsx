@@ -18,6 +18,7 @@ export default function ComparePanel() {
   const { currencies } = useCurrencies();
 
   const amt = parseFloat(amount);
+  const hasAmount = Number.isFinite(amt) && amt > 0;
 
   return (
     <div className="compare-panel">
@@ -35,6 +36,13 @@ export default function ComparePanel() {
           tone="error"
           title="COULDN'T LOAD RATES"
           desc="Check your connection and try again."
+        />
+      ) : !hasAmount ? (
+        <StateNotice
+          tone="empty"
+          icon="exchange"
+          title="ENTER AN AMOUNT"
+          desc="Type a send amount above to compare it across currencies."
         />
       ) : (
       <div className="compare-panel__list">
