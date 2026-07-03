@@ -77,7 +77,7 @@ Users can:
 ### Links
 
 - Solution URL: [github.com/kcde/fx-checker](https://github.com/kcde/fx-checker)
-- Live Site URL: _Not yet deployed._
+- Live Site URL: [fx-checker-eta.vercel.app](https://fx-checker-eta.vercel.app/)
 
 ## My process
 
@@ -173,7 +173,6 @@ had to step aside while a tab is focused.
 
 ### Continued development
 
-- Deploy to a live URL (Vercel / Netlify / GitHub Pages)
 - A light theme toggle alongside the dark-first design
 - Persist the active pair in the URL for shareable/bookmarkable conversions
 - Cache the last successful rates and fall back to them with an "out of date" banner when the API is unreachable
@@ -202,10 +201,8 @@ partner, milestone by milestone.
 
 ## Author
 
-- Frontend Mentor - [@your-username](https://www.frontendmentor.io/profile/your-username)
+- Frontend Mentor - [@kcde](https://www.frontendmentor.io/profile/kcde)
 - GitHub - [@kcde](https://github.com/kcde)
-
-<!-- Update the Frontend Mentor handle above (and add any other links you'd like). -->
 
 ## Acknowledgments
 
